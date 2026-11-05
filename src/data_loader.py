@@ -14,6 +14,7 @@ ALIASES = {
     "location": "city", "state": "region", "skills_required": "skills",
     "skill": "skills", "experience": "experience_years", "experience_required": "experience_years",
     "salary": "salary_text", "salary_range": "salary_text", "employment_type": "employment_type",
+    "date": "posted_date", "posting_date": "posted_date", "posted_on": "posted_date",
 }
 
 class DatasetValidationError(ValueError):

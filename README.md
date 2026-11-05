@@ -33,7 +33,7 @@ The dashboard accepts a CSV upload, validates it, applies the same cleaning pipe
 
 ## Interface design and assets
 
-The dashboard uses a project-owned dark navy interface with cyan/blue chart accents, responsive layouts, accessible reduced-motion behaviour, and consistent filtered-data messaging. The overview visual at `assets/career-analytics-hero.svg` is an original project SVG created for JobScope India; it uses no third-party image or stock-photo asset and needs no additional licence or dependency.
+The dashboard uses a pastel pink outer canvas, white analytical surfaces, and controlled purple, pink, blue, cyan, orange and green accents. It has compact page headers, functional sidebar navigation, resettable filters, responsive metric cards and consistent filtered-data messaging. Salary charts keep explicit units separate, and the interface uses no stock photos or decorative generated imagery.
 
 ## Structure
 

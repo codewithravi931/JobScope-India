@@ -1,60 +1,63 @@
 """Shared presentation components for the JobScope India Streamlit interface."""
 from __future__ import annotations
 
-from pathlib import Path
 import html
 import streamlit as st
 
-ASSET_DIR = Path(__file__).resolve().parents[1] / "assets"
 
 def inject_styles() -> None:
-    """Apply the app-wide visual system without altering data or calculations."""
+    """Apply the pastel analytics visual system without changing any calculations."""
     st.markdown("""
     <style>
-    :root { --js-bg:#09111f; --js-surface:#101c2e; --js-surface-2:#15243a; --js-border:#263a55; --js-text:#f2f6fc; --js-muted:#9dafc4; --js-cyan:#53c8e9; --js-blue:#628cff; --js-good:#75d6b3; }
-    .stApp { background: radial-gradient(900px 480px at 84% -12%, rgba(60,120,190,.14), transparent 65%), var(--js-bg); color:var(--js-text); }
-    .block-container { max-width:1480px; padding:1.35rem 2.25rem 3.5rem; }
-    [data-testid="stHeader"] { background:rgba(9,17,31,.88); border-bottom:1px solid rgba(38,58,85,.55); }
-    [data-testid="stSidebar"] { background:#0b1525; border-right:1px solid var(--js-border); }
-    [data-testid="stSidebar"] > div:first-child { padding-top:.65rem; }
-    [data-testid="stSidebar"] .stMarkdown p { color:var(--js-muted); }
-    [data-testid="stSidebarNav"] { padding-top:1rem; }
-    [data-testid="stSidebarNav"] a { border-radius:9px; color:#bbcadb; margin:.1rem .45rem; transition:background .18s ease,color .18s ease,transform .18s ease; }
-    [data-testid="stSidebarNav"] a:hover, [data-testid="stSidebarNav"] a[aria-current="page"] { background:#152a43; color:#fff; transform:translateX(2px); }
-    .js-brand { display:flex; align-items:center; gap:.7rem; padding:.4rem .25rem 1rem; border-bottom:1px solid var(--js-border); margin-bottom:1.15rem; }
-    .js-brand-mark { display:grid; place-items:center; width:32px; height:32px; border-radius:9px; background:linear-gradient(145deg,#53c8e9,#5379e8); color:#07111f; font-weight:800; }
-    .js-brand-name { color:#f8fbff; font-weight:700; letter-spacing:-.02em; font-size:1.03rem; }.js-brand small{display:block;color:var(--js-muted);font-size:.7rem;margin-top:1px}
-    .js-filter-title { text-transform:uppercase; letter-spacing:.11em; font-size:.7rem; color:#7189a5; font-weight:700; margin:1.25rem 0 .25rem; }
-    .js-page { animation:js-fade .45s ease both; }.js-eyebrow { color:var(--js-cyan); text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; font-weight:750; margin-bottom:.35rem; }.js-page h1 { font-size:2rem; letter-spacing:-.045em; margin:0; color:var(--js-text); line-height:1.1; }.js-page p { color:var(--js-muted); max-width:760px; margin:.52rem 0 1.35rem; font-size:.96rem; }
-    .js-panel { border:1px solid var(--js-border); background:linear-gradient(150deg,rgba(21,36,58,.92),rgba(14,26,43,.92)); border-radius:14px; padding:1rem 1.1rem; box-shadow:0 12px 30px rgba(0,0,0,.12); }
-    .js-section-title { color:var(--js-text); font-size:1.03rem; font-weight:700; margin:1.65rem 0 .15rem; letter-spacing:-.015em; }.js-section-copy{color:var(--js-muted);font-size:.85rem;margin-bottom:.7rem}
-    .js-metric { min-height:118px; border:1px solid var(--js-border); border-radius:14px; padding:1rem; background:linear-gradient(145deg,#13223a,#101c2e); animation:js-rise .45s ease both; transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }.js-metric:hover{transform:translateY(-3px);border-color:#3d6289;box-shadow:0 12px 24px rgba(0,0,0,.2)}.js-metric-top{display:flex;justify-content:space-between;align-items:center}.js-metric-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;border:1px solid #315574;background:#102c44;color:#68d0eb;font-size:.9rem;line-height:1}.js-metric-kicker{color:#9dafc4;font-size:.78rem}.js-metric-value{font-size:1.65rem;font-weight:750;letter-spacing:-.05em;color:#f7fbff;margin:.38rem 0 .2rem}.js-metric-note{color:#6fd4ee;font-size:.73rem}
-    .js-hero { border:1px solid var(--js-border); border-radius:16px; background:linear-gradient(115deg,#111f35 0%,#10233a 62%,#0d1a2c 100%); overflow:hidden; padding:1.45rem; margin:.2rem 0 1.25rem; }.js-hero h2{font-size:1.65rem;letter-spacing:-.04em;margin:.45rem 0 .55rem;line-height:1.13}.js-hero p{margin:0;color:#b5c4d7;line-height:1.55}.js-badge{display:inline-flex;align-items:center;gap:.35rem;border:1px solid #315574;border-radius:999px;background:rgba(83,200,233,.08);color:#8edcf1;padding:.28rem .58rem;font-size:.72rem;font-weight:650}.js-source{color:#8297af;font-size:.75rem;margin-top:.8rem}
-    .stButton>button, .stDownloadButton>button { border:1px solid #356486; background:#153451; color:#eaf8ff; border-radius:8px; font-weight:650; transition:transform .18s ease, background .18s ease, border-color .18s ease; }.stButton>button:hover,.stDownloadButton>button:hover { transform:translateY(-1px); background:#1b4668; border-color:#54c8e8; color:#fff; }
-    [data-testid="stDataFrame"] { border:1px solid var(--js-border); border-radius:12px; overflow:hidden; }.stTextInput input,.stSelectbox [data-baseweb="select"]>div,.stMultiSelect [data-baseweb="select"]>div { background:#101c2e !important; border-color:#304763 !important; border-radius:8px !important; }
-    [data-testid="stMetric"] { background:#13223a; border:1px solid var(--js-border); border-radius:12px; padding:.75rem; }.stAlert{border-radius:10px}.stPlotlyChart{border:1px solid var(--js-border);border-radius:14px;background:rgba(16,28,46,.65);padding:.2rem;overflow:hidden;animation:js-rise .5s ease both}
-    .js-empty{border:1px dashed #3a5573;border-radius:12px;background:#101c2e;padding:1.4rem;text-align:center;color:#b8c7d8}.js-empty strong{color:#f4f8fd;display:block;margin-bottom:.35rem}
-    @keyframes js-fade { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} } @keyframes js-rise { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
-    @media (max-width: 760px) { .block-container{padding:1rem 1rem 2.5rem}.js-page h1{font-size:1.62rem}.js-hero{padding:1.1rem}.js-metric{min-height:98px;padding:.8rem}.js-metric-value{font-size:1.35rem} }
-    @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+    :root { --js-canvas:#F8E8F1; --js-surface:#FFFFFF; --js-text:#26334A; --js-muted:#748096; --js-faint:#929BAB; --js-border:#E9E6ED; --js-purple-soft:#F3E4F5; --js-purple:#A45AAE; --js-pink:#E66CA8; --js-blue-soft:#E4F1FA; --js-blue:#56A9DA; --js-cyan:#43BFD0; --js-orange-soft:#FFF0DB; --js-orange:#F0AD62; --js-green:#65BE91; }
+    .stApp { background:var(--js-canvas); color:var(--js-text); }
+    .block-container { max-width:1480px; padding:1.25rem 2rem 3rem; }
+    [data-testid="stHeader"] { background:rgba(248,232,241,.94); border-bottom:1px solid rgba(233,230,237,.72); }
+    [data-testid="stSidebar"] { background:#FFFFFF; border-right:1px solid var(--js-border); }
+    [data-testid="stSidebar"] > div:first-child { padding:1rem .72rem 2rem; }
+    [data-testid="stSidebar"] [data-testid="stSidebarNav"] { display:none; }
+    [data-testid="stSidebar"] .stCaption { color:var(--js-muted); line-height:1.45; }
+    .js-brand { display:flex; align-items:center; gap:.72rem; padding:.28rem .3rem 1.15rem; margin-bottom:.7rem; border-bottom:1px solid var(--js-border); }
+    .js-brand-mark { display:grid; place-items:center; width:34px; height:34px; border-radius:10px; background:var(--js-purple-soft); color:var(--js-purple); font-weight:800; font-size:1.05rem; }
+    .js-brand-name { color:var(--js-text); font-weight:780; letter-spacing:-.03em; font-size:1.04rem; }.js-brand small{display:block;color:var(--js-muted);font-size:.7rem;margin-top:2px}
+    .js-nav-label,.js-filter-title { text-transform:uppercase; letter-spacing:.12em; font-size:.66rem; color:var(--js-faint); font-weight:800; margin:1.1rem .35rem .4rem; }
+    [data-testid="stSidebar"] [data-testid="stPageLink"] { margin:.07rem 0; }
+    [data-testid="stSidebar"] [data-testid="stPageLink"] a { border-radius:8px; color:var(--js-muted); padding:.52rem .58rem; font-size:.88rem; transition:background .16s ease,color .16s ease; }
+    [data-testid="stSidebar"] [data-testid="stPageLink"] a:hover { background:#FBF4F8; color:var(--js-purple); }
+    [data-testid="stSidebar"] [data-testid="stPageLink"] a[aria-current="page"] { background:var(--js-purple-soft); color:var(--js-purple); font-weight:700; }
+    .js-page { background:var(--js-surface); border:1px solid var(--js-border); border-radius:14px; padding:1.05rem 1.25rem; margin:0 0 1rem; }
+    .js-topline { display:flex; justify-content:space-between; gap:1rem; align-items:center; margin-bottom:.55rem; }.js-eyebrow { color:var(--js-purple); text-transform:uppercase; letter-spacing:.115em; font-size:.68rem; font-weight:800; }.js-status { color:var(--js-muted); font-size:.74rem; background:#FAFAFC; border:1px solid var(--js-border); border-radius:999px; padding:.26rem .55rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:45%; }
+    .js-page h1 { color:var(--js-text); font-size:1.72rem; letter-spacing:-.045em; margin:0; line-height:1.14; }.js-page p { color:var(--js-muted); max-width:780px; margin:.45rem 0 0; font-size:.91rem; line-height:1.5; }
+    .js-section-title { color:var(--js-text); font-size:1.02rem; font-weight:760; margin:1.55rem 0 .17rem; letter-spacing:-.018em; }.js-section-copy{color:var(--js-muted);font-size:.83rem;margin-bottom:.68rem;line-height:1.45}
+    .js-metric { min-height:113px; border:1px solid var(--js-border); border-radius:12px; padding:.9rem 1rem; background:var(--js-surface); transition:transform .16s ease,border-color .16s ease; }.js-metric:hover{transform:translateY(-2px);border-color:#D9CBDD}.js-metric.purple{background:#FCF9FD;border-top:3px solid var(--js-purple)}.js-metric.pink{background:#FFF8FB;border-top:3px solid var(--js-pink)}.js-metric.blue{background:#F8FCFE;border-top:3px solid var(--js-blue)}.js-metric.orange{background:#FFFDF9;border-top:3px solid var(--js-orange)}.js-metric.green{background:#FAFDFB;border-top:3px solid var(--js-green)}
+    .js-metric-top{display:flex;justify-content:space-between;align-items:center}.js-metric-icon{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;background:#fff;border:1px solid var(--js-border);color:var(--js-purple);font-size:.82rem;line-height:1}.js-metric-kicker{color:var(--js-muted);font-size:.76rem;font-weight:650}.js-metric-value{font-size:1.65rem;font-weight:780;letter-spacing:-.05em;color:var(--js-text);margin:.35rem 0 .18rem}.js-metric-note{color:var(--js-faint);font-size:.72rem}
+    .js-insight { background:#FFFFFF; border:1px solid var(--js-border); border-left:3px solid var(--js-purple); border-radius:10px; padding:.8rem .9rem; color:var(--js-muted); font-size:.84rem; line-height:1.5; margin:.36rem 0; }.js-insight strong { color:var(--js-text); }
+    .stButton>button,.stDownloadButton>button { border:1px solid #D9C8DD; background:#FFFFFF; color:var(--js-purple); border-radius:8px; font-weight:700; font-size:.82rem; }.stButton>button:hover,.stDownloadButton>button:hover { border-color:var(--js-purple); background:var(--js-purple-soft); color:var(--js-purple); }
+    .stTextInput input,.stSelectbox [data-baseweb="select"]>div,.stMultiSelect [data-baseweb="select"]>div,[data-baseweb="base-input"] { background:#FFFFFF !important; border-color:var(--js-border) !important; border-radius:8px !important; color:var(--js-text) !important; }.stTextInput input:focus,.stSelectbox [data-baseweb="select"]>div:focus-within,.stMultiSelect [data-baseweb="select"]>div:focus-within { border-color:var(--js-purple) !important; box-shadow:0 0 0 1px var(--js-purple) !important; }
+    [data-testid="stDataFrame"],.stPlotlyChart { background:#FFFFFF; border:1px solid var(--js-border); border-radius:12px; overflow:hidden; }.stPlotlyChart { padding:.1rem; }.stTabs [data-baseweb="tab-list"] { gap:1.2rem; }.stTabs [data-baseweb="tab"] { color:var(--js-muted); padding:.4rem .08rem; }.stTabs [aria-selected="true"] { color:var(--js-purple) !important; border-bottom-color:var(--js-purple) !important; }.stAlert { border-radius:10px; }
+    .js-empty{border:1px dashed #D8CEDA;border-radius:12px;background:#FFFFFF;padding:1.4rem;text-align:center;color:var(--js-muted)}.js-empty strong{color:var(--js-text);display:block;margin-bottom:.35rem}
+    @media (max-width:760px) { .block-container{padding:.9rem .85rem 2.3rem}.js-page{padding:.9rem 1rem}.js-page h1{font-size:1.45rem}.js-status{display:none}.js-metric{min-height:98px;padding:.8rem}.js-metric-value{font-size:1.35rem} }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; } }
     </style>
     """, unsafe_allow_html=True)
 
-def page_header(eyebrow: str, title: str, description: str) -> None:
-    st.markdown(f'<section class="js-page"><div class="js-eyebrow">{html.escape(eyebrow)}</div><h1>{html.escape(title)}</h1><p>{html.escape(description)}</p></section>', unsafe_allow_html=True)
+
+def page_header(title: str, subtitle: str, description: str, source: str = "") -> None:
+    status = f"Dataset: {html.escape(source)}" if source else "Filtered dataset"
+    st.markdown(f'<section class="js-page"><div class="js-topline"><div class="js-eyebrow">Career &amp; labour market analytics</div><div class="js-status">{status}</div></div><h1>{html.escape(title)}</h1><p><strong>{html.escape(subtitle)}</strong> &nbsp;{html.escape(description)}</p></section>', unsafe_allow_html=True)
+
 
 def section_title(title: str, description: str = "") -> None:
     st.markdown(f'<div class="js-section-title">{html.escape(title)}</div><div class="js-section-copy">{html.escape(description)}</div>', unsafe_allow_html=True)
 
-def metric_card(label: str, value: str, note: str, icon: str = "◈") -> None:
-    st.markdown(f'<div class="js-metric"><div class="js-metric-top"><div class="js-metric-kicker">{html.escape(label)}</div><span class="js-metric-icon" aria-hidden="true">{html.escape(icon)}</span></div><div class="js-metric-value">{html.escape(value)}</div><div class="js-metric-note">{html.escape(note)}</div></div>', unsafe_allow_html=True)
 
-def overview_hero() -> None:
-    left, right = st.columns([1.2, .8], gap="large")
-    with left:
-        st.markdown("""<div class="js-hero"><span class="js-badge">● Live analysis workspace</span><h2>Turn market signals into a focused career direction.</h2><p>Explore roles, skills, experience requirements and salary disclosure using transparent, filterable job-posting data.</p><div class="js-source">DA-021 · Job Market Skills and Salary Analysis</div></div>""", unsafe_allow_html=True)
-    with right:
-        st.image(str(ASSET_DIR / "career-analytics-hero.svg"), width="stretch")
+def metric_card(label: str, value: str, note: str, icon: str = "•", tone: str = "purple") -> None:
+    st.markdown(f'<div class="js-metric {html.escape(tone)}"><div class="js-metric-top"><div class="js-metric-kicker">{html.escape(label)}</div><span class="js-metric-icon" aria-hidden="true">{html.escape(icon)}</span></div><div class="js-metric-value">{html.escape(value)}</div><div class="js-metric-note">{html.escape(note)}</div></div>', unsafe_allow_html=True)
+
+
+def insight(text: str, lead: str = "Observation") -> None:
+    st.markdown(f'<div class="js-insight"><strong>{html.escape(lead)}.</strong> {html.escape(text)}</div>', unsafe_allow_html=True)
+
 
 def empty_panel() -> None:
-    st.markdown('<div class="js-empty"><strong>No matching records</strong>Adjust or clear one or more filters to bring data back into view.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="js-empty"><strong>No matching records</strong>Adjust or reset one or more filters to bring data back into view.</div>', unsafe_allow_html=True)

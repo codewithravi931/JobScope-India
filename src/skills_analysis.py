@@ -4,7 +4,9 @@ import pandas as pd
 
 def skill_frequency(data: pd.DataFrame, limit: int = 20) -> pd.DataFrame:
     skills = data.get("skills_list", pd.Series(dtype=object)).explode().dropna()
-    return skills.value_counts().head(limit).rename_axis("skill").reset_index(name="postings")
+    result = skills.value_counts().head(limit).rename_axis("skill").reset_index(name="postings")
+    result["posting_share_pct"] = (result["postings"] / len(data) * 100).round(1) if len(data) else 0.0
+    return result
 
 def skills_by_role(data: pd.DataFrame, role: str | None = None, limit: int = 12) -> pd.DataFrame:
     df = data

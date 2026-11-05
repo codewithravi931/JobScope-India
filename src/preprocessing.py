@@ -76,6 +76,9 @@ def clean_job_data(raw: pd.DataFrame) -> CleaningResult:
     if "experience_years" in df:
         df["experience_years"] = df["experience_years"].map(_parse_experience)
     else: df["experience_years"] = np.nan
+    if "posted_date" not in df:
+        df["posted_date"] = pd.NaT
+    df["posted_date_clean"] = pd.to_datetime(df["posted_date"], errors="coerce")
     if "skills" not in df: df["skills"] = pd.NA
     df["skills_list"] = df["skills"].map(extract_skills)
     for col in ["city", "region", "country", "role", "category", "seniority", "remote", "employment_type"]:
@@ -84,12 +87,17 @@ def clean_job_data(raw: pd.DataFrame) -> CleaningResult:
     df["role_clean"] = df["role"].astype("string").str.strip().str.lower()
     df["country_clean"] = df["country"].astype("string").str.strip().replace({"india": "IN", "India": "IN"})
     source_usd = pd.to_numeric(df.get("salary_annual_usd", pd.Series(np.nan, index=df.index)), errors="coerce")
+    source_lpa = pd.to_numeric(df.get("salary_lpa", pd.Series(np.nan, index=df.index)), errors="coerce")
     df["salary_annual_usd"] = source_usd.where((source_usd > 0) & (source_usd <= 10_000_000))
+    df["salary_lpa"] = source_lpa.where((source_lpa > 0) & (source_lpa <= 10_000))
     parsed = df.get("salary_text", pd.Series(pd.NA, index=df.index)).map(_parse_salary_text)
     parsed_usd = parsed.map(lambda x: x[0]); parsed_lpa = parsed.map(lambda x: x[1]); parsed_currency = parsed.map(lambda x: x[2])
     df["salary_annual_usd"] = df["salary_annual_usd"].fillna(parsed_usd)
-    df["salary_lpa"] = parsed_lpa
-    df["salary_currency"] = np.where(df["salary_annual_usd"].notna(), "USD", parsed_currency)
+    df["salary_lpa"] = df["salary_lpa"].fillna(parsed_lpa)
+    df["salary_currency"] = np.where(
+        df["salary_annual_usd"].notna(), "USD",
+        np.where(df["salary_lpa"].notna(), "INR", parsed_currency),
+    )
     df["salary_outlier_flag"] = df["salary_annual_usd"].notna() & ((df["salary_annual_usd"] < 1000) | (df["salary_annual_usd"] > 1_000_000))
     audit.append({"action": "flagged salary outliers", "rows": int(df["salary_outlier_flag"].sum()), "reason": "annual USD < 1,000 or > 1,000,000; retained for transparency"})
     audit.append({"action": "retained missing salaries", "rows": int(df["salary_annual_usd"].isna().sum()), "reason": "missing pay is not zero"})

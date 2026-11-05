@@ -16,6 +16,12 @@ def test_explicit_inr_lpa_is_not_mixed_with_usd():
     assert result.data.loc[0,"salary_lpa"] == 6
     assert result.data.loc[0,"salary_annual_usd"] != result.data.loc[0,"salary_annual_usd"]
 
+def test_existing_lpa_and_posting_date_are_preserved():
+    result=clean_job_data(pd.DataFrame({"title":["Analyst"],"salary_lpa":[8],"posted_date":["2026-01-01"]}))
+    assert result.data.loc[0,"salary_lpa"] == 8
+    assert result.data.loc[0,"salary_currency"] == "INR"
+    assert str(result.data.loc[0,"posted_date_clean"].date()) == "2026-01-01"
+
 def test_empty_salary_summary_is_safe():
     result=clean_job_data(pd.DataFrame({"title":["Analyst"]}))
     assert salary_summary(result.data)["disclosure_pct"] == 0
